@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Re-Light | Portofolio Digital</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg: #050505;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent: #3b82f6; 
+            --text-main: #ffffff;
+            --text-dim: #94a3b8;
+            --radius-lg: 32px;
+            --radius-md: 20px;
+            --glass-blur: 30px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- Efek Noise Latar Belakang --- */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .glow-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 40%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* --- Manajemen Tampilan --- */
+        .view {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .view.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Gaya Beranda --- */
+        header {
+            padding: 100px 24px 60px;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding: 6px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            border-radius: 100px;
+            backdrop-filter: blur(10px);
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        header h1 {
+            font-size: clamp(3rem, 8vw, 4.5rem);
+            font-weight: 600;
+            letter-spacing: -3px;
+            line-height: 1;
+            background: linear-gradient(to bottom, #fff 30%, rgba(255,255,255,0.4) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+
+        .grid-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 140px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(var(--glass-blur));
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 280px;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .icon-container {
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 32px;
+            transition: 0.4s;
+            color: var(--text-dim);
+        }
+
+        .card:hover .icon-container {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+        }
+
+        /* --- Galeri Karya --- */
+        .artwork-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .artwork-item {
+            aspect-ratio: 1;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            cursor: zoom-in;
+        }
+
+        .artwork-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .artwork-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* --- Daftar Tulisan --- */
+        .writing-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .writing-item {
+            padding: 30px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .writing-item:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: var(--accent);
+        }
+
+        /* --- Gaya Modal --- */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #111;
+            border: 1px solid var(--card-border);
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            position: relative;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        #modal-img-display {
+            width: 100%;
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- Menu Dock --- */
+        .dock-container {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            padding: 8px;
+            background: rgba(20, 20, 25, 0.6);
+            backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 40px;
+            display: flex;
+            gap: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+        }
+
+        .dock-item {
+            width: 54px;
+            height: 54px;
+            border-radius: 27px;
+            border: none;
+            background: transparent;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .dock-item.active {
+            background: #fff;
+            color: #000;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 60px;
+            background: var(--card-bg);
+            border: 2px solid var(--accent);
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .profile-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-header {
+            padding: 60px 24px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glow-bg"></div>
+
+    <!-- Tampilan Beranda -->
+    <section id="home-view" class="view active">
+        <header>
+            <div class="logo-badge"><i data-lucide="zap" size="14"></i><span>R Light OS</span></div>
+            <h1>Re-Light</h1>
+            <p>(Re:Ulangi,Definisikan,Perbaiki (Cahaya))</p>
+            
+            </p>*Masih Beta BTW*</p>
+        </header>
+
+        <main class="grid-container">
+            <div class="card" onclick="navigateTo('design-view')">
+                <div class="icon-container"><i data-lucide="palette"></i></div>
+                <div><h2>Digital Design</h2><p>UI/UX & Visual Art pilihan.</p></div>
+            </div>
+            <div class="card" onclick="navigateTo('draw-view')">
+                <div class="icon-container"><i data-lucide="brush"></i></div>
+                <div><h2>Sketch</h2><p>Eksperimen coretan digital.</p></div>
+            </div>
+            <div class="card" onclick="navigateTo('photo-view')">
+                <div class="icon-container"><i data-lucide="aperture"></i></div>
+                <div><h2>Photography</h2><p>Menangkap momen lewat lensa.</p></div>
+            </div>
+            <div class="card" onclick="navigateTo('lit-view')">
+                <div class="icon-container"><i data-lucide="pen-tool"></i></div>
+                <div><h2>Write</h2><p>Untaian kata dan esai singkat.</p></div>
+            </div>
+        </main>
+    </section>
+
+    <!-- Galeri Digital Design -->
+    <section id="design-view" class="view">
+        <div class="gallery-header">
+            <button class="back-btn" onclick="navigateTo('home-view')"><i data-lucide="chevron-left"></i></button>
+            <div><h2>Digital Design</h2><p style="color:var(--text-dim)">Desain Canva,Adobe DLL</p></div>
+        </div>
+        <div style="max-width:1200px; margin:0 auto; padding:0 24px 100px;">
+            <div class="artwork-grid">
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'Absurdity Horror')"><img src="poster1.jpeg" alt="Absurdity Horror"></div>
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'Recruitment Ekskul')"><img src="poster2.jpeg" alt="Recruitment Ekskul"></div>
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'Drama Promotion')"><img src="poster3.jpeg" alt="Drama Promotion"></div>
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'Nationality')"><img src="poster4.jpeg" alt="Nationality"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galeri My Sketch (DIPERBAIKI) -->
+    <section id="draw-view" class="view">
+        <div class="gallery-header">
+            <button class="back-btn" onclick="navigateTo('home-view')"><i data-lucide="chevron-left"></i></button>
+            <div><h2>My Sketch</h2><p style="color:var(--text-dim)">Asal Coret</p></div>
+        </div>
+        <div style="max-width:1200px; margin:0 auto; padding:0 24px 100px;">
+            <div class="artwork-grid">
+                <!-- Aset Placeholder Sketsa yang Artistik -->
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'someone person')">
+                    <img src="draw1.png.jpeg" alt="Sketch 1">
+                </div>
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'Anatomical Study')">
+                    <img src="belom rilis" alt="Sketch 2">
+                </div>
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'Environment Doodling')">
+                    <img src="https://images.unsplash.com/photo-1515405848666-83e847d89c7f?q=80&w=600&auto=format" alt="Sketch 3">
+                </div>
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'Portrait Shading')">
+                    <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=600&auto=format" alt="Sketch 4">
+                </div>
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'Abstract Lines')">
+                    <img src="https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?q=80&w=600&auto=format" alt="Sketch 5">
+                </div>
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'Concept Art Base')">
+                    <img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=600&auto=format" alt="Sketch 6">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galeri Photography -->
+    <section id="photo-view" class="view">
+        <div class="gallery-header">
+            <button class="back-btn" onclick="navigateTo('home-view')"><i data-lucide="chevron-left"></i></button>
+            <div><h2>Photography</h2><p style="color:var(--text-dim)">Asal Cekrek</p></div>
+        </div>
+        <div style="max-width:1200px; margin:0 auto; padding:0 24px 100px;">
+            <div class="artwork-grid">
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'Rama And Shinta')"><img src="jepret1.jpeg" alt="Street Night"></div>
+<div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'The Unknown Field')"><img src="jepret2.jpeg" alt="Architecture"></div>
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'Absolute Void')"><img src="jepret3.jpeg" alt="Space Geometry"></div>
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'The Deep Fire In Forest')"><img src="jepret4.jpeg" alt="Nature Deep"></div>
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'Triad POV')"><img src="jepret5.jpeg" alt="Poster 1"></div>
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'Dont Know')"><img src="jepret6.jpeg" alt="Poster 2"></div>
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'The Little Hope')"><img src="jepret7.jpeg" alt="Poster 3"></div>
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'Either Me and Someone')"><img src="jepret8.jpeg" alt=""></div>
+                <div class="artwork-item" onclick="openImgModal(this.querySelector('img').src, 'Between Three and Sky')"><img src="jepret9.jpeg" alt="Draw 1"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bagian Literasi -->
+    <section id="lit-view" class="view">
+        <div class="gallery-header">
+            <button class="back-btn" onclick="navigateTo('home-view')"><i data-lucide="chevron-left"></i></button>
+            <div><h2>Catatan</h2><p style="color:var(--text-dim)">Kumpulan Pemikiran</p></div>
+        </div>
+        <div style="max-width:800px; margin:0 auto; padding:0 24px 100px;">
+            <div class="writing-list">
+                <div class="writing-item" onclick="openLit('Filosofi Cahaya', 'Cahaya bukan sekadar gelombang elektromagnetik. Bagi saya, cahaya adalah pembawa informasi tentang ruang dan waktu. Tanpa cahaya, estetika hanyalah kegelapan yang tak terdefinisi. Dalam setiap desain yang saya buat, saya mencoba memahami bagaimana cahaya jatuh dan memberikan nyawa pada objek.')">
+                    <h3>Catatan Digital</h3>
+                    <p>belom ke upload</p>
+                </div>
+                <div class="writing-item" onclick="openLit('Narasi Digital', 'Di era algoritma, cerita sering kali terkubur oleh tren. Namun, narasi yang jujur akan selalu menemukan jalannya. Melalui portofolio ini, saya mencoba mengumpulkan kembali serpihan narasi yang sempat tercecer di folder-folder tak bernama.')">
+                    <h3>Catatan Digital</h3>
+                    <p>belom ke upload</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bagian Tentang -->
+    <section id="about-view" class="view">
+        <div class="gallery-header">
+            <button class="back-btn" onclick="navigateTo('home-view')"><i data-lucide="chevron-left"></i></button>
+            <div><h2>About Me</h2><p style="color:var(--text-dim)">Kreator Re-Light</p></div>
+        </div>
+        <div style="max-width:800px; margin:0 auto; padding:60px 24px; text-align:center;">
+            <div class="profile-img">
+                <img src="profile.png.jpeg" alt="Profile">
+            </div>
+            <h2>Raifan</h2>
+            <p style="color:var(--text-dim); margin-top:20px; line-height:1.6;">
+                Seorang manusia biasa yang lumayan bisa banyak hal tapi "bisa" nya  nanggung (tidak ahli).
+                Website ini saya buat dengan gabut,tapi semoga bermanfaat-lah
+            </p>
+        </div>
+    </section>
+
+    <!-- Modal Utama (Teks & Gambar) -->
+    <div id="main-modal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()"><i data-lucide="x"></i></button>
+            <img id="modal-img-display" src="" alt="Preview">
+            <h2 id="modal-title" style="margin-bottom:20px; color:var(--accent);"></h2>
+            <p id="modal-text" style="line-height:1.8; color:rgba(255,255,255,0.8);"></p>
+        </div>
+    </div>
+
+    <!-- Menu Dock -->
+    <nav class="dock-container">
+        <button class="dock-item active" id="dock-home" onclick="navigateTo('home-view')"><i data-lucide="home"></i></button>
+        <button class="dock-item" id="dock-design" onclick="navigateTo('all-works')"><i data-lucide="layout-grid"></i></button>
+        <button class="dock-item" id="dock-about" onclick="navigateTo('about-view')"><i data-lucide="user"></i></button>
+    </nav>
+
+    <script>
+        lucide.createIcons();
+
+        function navigateTo(viewId) {
+            // Logika khusus untuk shortcut dock
+            if(viewId === 'all-works') {
+                viewId = 'design-view'; // Default ke design jika dari dock
+            }
+
+            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+            setTimeout(() => {
+                const target = document.getElementById(viewId);
+                if (target) {
+                    target.classList.add('active');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }, 50);
+
+            document.querySelectorAll('.dock-item').forEach(item => item.classList.remove('active'));
+            if(viewId === 'home-view') document.getElementById('dock-home').classList.add('active');
+            else if(viewId === 'about-view') document.getElementById('dock-about').classList.add('active');
+            else document.getElementById('dock-design').classList.add('active');
+        }
+
+        // Membuka modal untuk teks literasi
+        function openLit(title, text) {
+            const modal = document.getElementById('main-modal');
+            const modalImg = document.getElementById('modal-img-display');
+            
+            modalImg.style.display = 'none';
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-text').innerText = text;
+            modal.classList.add('active');
+        }
+
+        // Membuka modal untuk preview gambar
+        function openImgModal(src, title) {
+            const modal = document.getElementById('main-modal');
+            const modalImg = document.getElementById('modal-img-display');
+            
+            modalImg.src = src;
+            modalImg.style.display = 'block';
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-text').innerText = ""; // Kosongkan teks jika gambar
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('main-modal').classList.remove('active');
+        }
+
+        // Tutup modal jika klik di luar konten
+        window.onclick = function(event) {
+            const modal = document.getElementById('main-modal');
+            if (event.target == modal) closeModal();
+        }
+    </script>
+</body>
+</html>
