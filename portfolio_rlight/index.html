@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Re-Light | Arsip Visual & Portofolio Raifan</title>
+    
+    <!-- Tipografi Handwritten: Caveat (Display), Patrick Hand (Body), Architects Daughter (Catatan) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Stylesheet Utama -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-lighting="tungsten">
+
+    <!-- Motion Graphic: Garis Progres Tinta Scroll di Puncak Layar -->
+    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+
+    <!-- Motion Graphic: Kanvas Partikel Cahaya & Bokeh Melayang -->
+    <canvas class="motion-bg-canvas" id="motionBgCanvas" aria-hidden="true"></canvas>
+
+    <!-- Efek Grain Kertas/Film & Lampu Ambient -->
+    <div class="film-grain"></div>
+    <div class="ambient-light" id="ambientLight"></div>
+
+    <!-- ==================================================================== -->
+    <!-- HEADER / MASTHEAD UTAMA                                              -->
+    <!-- ==================================================================== -->
+    <header class="masthead">
+        <div class="masthead-inner">
+            <a class="brand-link" onclick="scrollToSection('hero-section')">
+                <span class="brand-lamp"></span>
+                <span class="brand-title" id="brandTitleDisplay">Re-Light</span>
+                <span class="brand-edition" id="brandEditionDisplay">Ed. 2024 / Studio Raifan</span>
+            </a>
+
+            <!-- Menu Navigasi Cepat -->
+            <nav class="nav-links" aria-label="Navigasi Utama">
+                <button type="button" class="nav-btn active" data-category="all" onclick="filterCatalog('all', this)">Semua</button>
+                <button type="button" class="nav-btn" data-category="design" onclick="filterCatalog('design', this)">Desain</button>
+                <button type="button" class="nav-btn" data-category="sketch" onclick="filterCatalog('sketch', this)">Sketsa</button>
+                <button type="button" class="nav-btn" data-category="photo" onclick="filterCatalog('photo', this)">Fotografi</button>
+                <button type="button" class="nav-btn" data-section="writing-section" onclick="scrollToSection('writing-section', this)">Catatan</button>
+                <button type="button" class="nav-btn" data-section="music-section" onclick="scrollToSection('music-section', this)">
+                    <i data-lucide="music" size="14" style="color: #1db954;"></i> Musik
+                </button>
+                <button type="button" class="nav-btn" data-section="about-section" onclick="scrollToSection('about-section', this)">Tentang</button>
+            </nav>
+
+            <!-- Pengatur Suhu Cahaya (Tungsten, Studio, Noir) -->
+            <div class="lighting-control" role="group" aria-label="Mode Pencahayaan">
+                <span style="opacity: 0.7; display:flex; align-items:center;"><i data-lucide="sun-medium" size="14"></i></span>
+                <button type="button" class="light-option active" data-theme="tungsten" onclick="setLighting('tungsten', this)">Tungsten</button>
+                <button type="button" class="light-option" data-theme="studio" onclick="setLighting('studio', this)">Studio</button>
+                <button type="button" class="light-option" data-theme="noir" onclick="setLighting('noir', this)">Noir</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- ================================================================ -->
+        <!-- 1. HERO SECTION (DENGAN MOTION GRAPHIC SVG TULISAN TANGAN)       -->
+        <!-- ================================================================ -->
+        <section class="hero reveal-on-scroll" id="hero-section">
+            <div class="hero-top-row">
+                <div class="hero-meta">
+                    <span id="heroMetaDisplay">Arsip Visual & Eksplorasi Digital</span>
+                    <span>•</span>
+                    <span>Raifan</span>
+                </div>
+
+                <!-- Motion Graphic: Lampu Filamen Tulis Tangan Berdenyut -->
+                <div class="hero-sketch-emblem" aria-hidden="true">
+                    <svg class="sketch-bulb-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g class="bulb-rays">
+                            <path class="draw-path" d="M60 8 L60 22" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                            <path class="draw-path" d="M24 23 L34 33" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                            <path class="draw-path" d="M96 23 L86 33" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                            <path class="draw-path" d="M10 56 L24 56" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                            <path class="draw-path" d="M110 56 L96 56" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                        </g>
+                        <path class="bulb-glass draw-path" d="M43 72 C34 65 32 50 38 40 C44 30 56 26 68 30 C80 34 86 48 82 60 C79 68 74 71 71 78 L49 78 C47 74 45 73 43 72 Z" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="bulb-filament" d="M54 78 L54 58 C54 53 58 51 60 56 C62 51 66 53 66 58 L66 78" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path class="draw-path" d="M50 85 L70 85 M52 92 L68 92 M56 99 L64 99" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <h1 class="hero-title">
+                <span id="heroHeadingMain">Ulangi, definisikan, dan</span>
+                <span class="hero-emphasis-wrap">
+                    <em id="heroHeadingEm">perbaiki cahaya.</em>
+                    <!-- Motion Graphic: Goresan Pena Garis Bawah SVG -->
+                    <svg class="hero-underline-svg" viewBox="0 0 360 28" preserveAspectRatio="none" aria-hidden="true">
+                        <path class="underline-stroke" d="M4 18 C 75 6, 185 24, 354 10" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/>
+                        <path class="underline-stroke secondary" d="M22 24 C 120 15, 220 26, 330 17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+            </h1>
+
+            <div class="hero-sub">
+                <div>
+                    <p class="hero-desc" id="heroDescDisplay">
+                        Sebuah kurasi karya santai tanpa pretensi. Merangkum eksplorasi desain visual, coretan sketsa lepas, dan fragmen fotografi jalanan yang sempat tercecer di folder-folder tak bernama.
+                    </p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-num" id="totalCount">0</span>
+                            <span class="stat-label">Arsip Karya</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-num" id="statEssaysCount">3</span>
+                            <span class="stat-label">Catatan Esai</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-num">1</span>
+                            <span class="stat-label" id="statCreatorRole">Kreator Biasa</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-manifesto">
+                    <p id="heroManifestoDisplay">
+                        <strong>(Re:Light)</strong> — Mengulang proses, menemukan kembali kontras antara gelap dan terang. Sebuah wadah kreatif untuk bereksperimen dengan berbagai medium visual tanpa batasan label.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Motion Graphic: Pita Teks Berjalan Kinetik (Kinetic Ribbon) -->
+        <div class="motion-marquee" aria-hidden="true">
+            <div class="marquee-track">
+                <span><svg class="marquee-star" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="currentColor"/></svg> RE-LIGHT STUDIO</span>
+                <span><svg class="marquee-star" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="currentColor"/></svg> ASAL CORET</span>
+                <span><svg class="marquee-star" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="currentColor"/></svg> ASAL CEKREK</span>
+                <span><svg class="marquee-star" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="currentColor"/></svg> DIGITAL DESIGN</span>
+                <span><svg class="marquee-star" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="currentColor"/></svg> SOUNDTRACK RUANG GELAP</span>
+                <span><svg class="marquee-star" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="currentColor"/></svg> ARSIP VISUAL RAIFAN</span>
+                <!-- Duplikasi untuk loop tanpa putus -->
+                <span><svg class="marquee-star" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="currentColor"/></svg> RE-LIGHT STUDIO</span>
+                <span><svg class="marquee-star" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="currentColor"/></svg> ASAL CORET</span>
+                <span><svg class="marquee-star" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="currentColor"/></svg> ASAL CEKREK</span>
+                <span><svg class="marquee-star" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="currentColor"/></svg> DIGITAL DESIGN</span>
+                <span><svg class="marquee-star" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="currentColor"/></svg> SOUNDTRACK RUANG GELAP</span>
+                <span><svg class="marquee-star" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="currentColor"/></svg> ARSIP VISUAL RAIFAN</span>
+            </div>
+        </div>
+
+        <!-- ================================================================ -->
+        <!-- 2. TOOLBAR & FILTER PAMERAN                                      -->
+        <!-- ================================================================ -->
+        <section class="exhibition-toolbar">
+            <div class="filter-group">
+                <button type="button" class="filter-pill active" data-category="all" onclick="filterCatalog('all', this)">
+                    Semua Karya <span class="filter-count" id="countAll">0</span>
+                </button>
+                <button type="button" class="filter-pill" data-category="design" onclick="filterCatalog('design', this)">
+                    Digital Design <span class="filter-count" id="countDesign">0</span>
+                </button>
+                <button type="button" class="filter-pill" data-category="sketch" onclick="filterCatalog('sketch', this)">
+                    Sketsa Lepas <span class="filter-count" id="countSketch">0</span>
+                </button>
+                <button type="button" class="filter-pill" data-category="photo" onclick="filterCatalog('photo', this)">
+                    Fotografi <span class="filter-count" id="countPhoto">0</span>
+                </button>
+            </div>
+
+            <div class="active-filter-status">
+                <span id="activeFilterLabel">Mode Interaktif: Atelier & Studio Re-Light (Tanpa Gambar)</span>
+            </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- 3. ATELIER INTERAKTIF (TAMPIL KHUSUS DI BAGIAN "SEMUA")          -->
+        <!-- ================================================================ -->
+        <section class="interactive-atelier" id="interactiveAtelier">
+            <!-- Header Pengantar Atelier -->
+            <div class="atelier-intro reveal-on-scroll">
+                <div class="atelier-intro-text">
+                    <h2>Sketch Area</h2>
+                    <p>
+                        Bagian <em>"Semua"</em> Anda bisa mencoret sketsa bebas, mengoperasikan simulasi bidikan kamera jalanan, atau menguji suhu pencahayaan. Untuk melihat galeri foto lengkap, pilih tab <strong>Desain</strong>, <strong>Sketsa</strong>, atau <strong>Fotografi</strong> di atas.
+                    </p>
+                </div>
+                <div class="atelier-live-pill">
+                    <i data-lucide="sparkles" size="15"></i>
+                    <span>Eksplor Tanpa Gambar</span>
+                </div>
+            </div>
+
+            <!-- Grid 2 Modul Interaktif: Sketchpad & Kamera -->
+            <div class="atelier-split-grid">
+                <!-- Modul 1: Digital Scratchpad -->
+                <div class="atelier-panel interactive-sheen reveal-on-scroll">
+                    <div>
+                        <div class="panel-header">
+                            <div>
+                                <div class="panel-kicker">Eksperimen Sketsa</div>
+                                <h3 class="panel-title">Kanvas Coretan Bebas</h3>
+                            </div>
+                            <span class="panel-badge">Asal Coret ✎</span>
+                        </div>
+
+                        <!-- Area Menggambar dengan Latar Buku Sketsa Titik-Titik -->
+                        <div class="sketch-canvas-wrap">
+                            <span class="sketch-doodle-hint" aria-hidden="true">Coret sesukamu di sini ↘</span>
+                            <canvas id="sketchCanvas" width="560" height="350"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Toolbar Alat Gambar -->
+                    <div class="sketch-toolbar">
+                        <div class="tool-group">
+                            <button type="button" class="tool-btn active" id="toolPencil" onclick="setSketchTool('pencil', this)" title="Pensil Halus">
+                                <i data-lucide="edit-2" size="13"></i> Pensil
+                            </button>
+                            <button type="button" class="tool-btn" id="toolGlow" onclick="setSketchTool('glow', this)" title="Kuas Cahaya">
+                                <i data-lucide="sun" size="13"></i> Cahaya
+                            </button>
+                            <button type="button" class="tool-btn" id="toolEraser" onclick="setSketchTool('eraser', this)" title="Penghapus">
+                                <i data-lucide="eraser" size="13"></i> Hapus
+                            </button>
+                        </div>
+
+                        <!-- Ukuran Kuas & Pilihan Warna -->
+                        <div class="tool-group">
+                            <button type="button" class="tool-btn size-btn active" data-size="3" onclick="setBrushSize(3, this)" title="Ukuran Tipis">S</button>
+                            <button type="button" class="tool-btn size-btn" data-size="6" onclick="setBrushSize(6, this)" title="Ukuran Sedang">M</button>
+                            <button type="button" class="tool-btn size-btn" data-size="12" onclick="setBrushSize(12, this)" title="Ukuran Tebal">L</button>
+                        </div>
+
+                        <div class="tool-group">
+                            <span class="color-dot active" style="background:#e38d4a;" onclick="setSketchColor('#e38d4a', this)" title="Amber Tungsten"></span>
+                            <span class="color-dot" style="background:#f4efe6;" onclick="setSketchColor('#f4efe6', this)" title="Putih Gading"></span>
+                            <span class="color-dot" style="background:#38bdf8;" onclick="setSketchColor('#38bdf8', this)" title="Cyan Senja"></span>
+                            <span class="color-dot" style="background:#f43f5e;" onclick="setSketchColor('#f43f5e', this)" title="Neon Rose"></span>
+                        </div>
+
+                        <div class="tool-group">
+                            <button type="button" class="tool-btn" id="undoSketchBtn" onclick="undoSketchCanvas()" title="Urungkan Coretan (Ctrl+Z)">
+                                <i data-lucide="undo-2" size="13"></i> Undo
+                            </button>
+                            <button type="button" class="tool-btn" onclick="clearSketchCanvas()" title="Bersihkan Kanvas">
+                                <i data-lucide="rotate-ccw" size="13"></i> Bersihkan
+                            </button>
+                            <button type="button" class="tool-btn" onclick="downloadSketchCanvas()" title="Simpan Sketsa PNG">
+                                <i data-lucide="download" size="13"></i> Simpan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modul 2: Viewfinder & Shutter Kamera 35mm -->
+                <div class="atelier-panel interactive-sheen reveal-on-scroll">
+                    <div>
+                        <div class="panel-header">
+                            <div>
+                                <div class="panel-kicker">Simulasi Fotografi</div>
+                                <h3 class="panel-title">Bidikan Lensa & Shutter</h3>
+                            </div>
+                            <span class="panel-badge">Asal Cekrek 📷</span>
+                        </div>
+
+                        <!-- Jendela Bidik Kamera -->
+                        <div class="viewfinder-wrap" id="cameraViewfinder">
+                            <img class="viewfinder-img" id="viewfinderImg" src="images/photography/jepret1.jpeg" alt="Pratinjau Lensa">
+                            <div class="viewfinder-grid-overlay"></div>
+                            <div class="viewfinder-crosshair" id="viewfinderCrosshair"></div>
+
+                            <!-- Motion Graphic: Tirai Rana Mekanik -->
+                            <div class="shutter-curtain shutter-top" id="shutterCurtainTop"></div>
+                            <div class="shutter-curtain shutter-bottom" id="shutterCurtainBottom"></div>
+                            <div class="viewfinder-shutter-flash" id="cameraFlash"></div>
+
+                            <!-- Bar Informasi LCD Kamera -->
+                            <div class="viewfinder-hud-top">
+                                <span>[ISO 400]</span>
+                                <span>[1/250s]</span>
+                                <span id="hudLensFilterDisplay">[COLOR]</span>
+                                <span style="color:#e38d4a;">[AF-LOCKED]</span>
+                            </div>
+
+                            <div class="viewfinder-hud-bottom">
+                                <span id="hudApertureDisplay">[f/2.8 STANDAR]</span>
+                                <span id="hudPhotoTitleDisplay">Rama And Shinta</span>
+                                <span id="hudPhotoCount">[FOTO: #01]</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Kontrol Kamera -->
+                    <div class="camera-controls-bar">
+                        <div class="tool-group">
+                            <button type="button" class="tool-btn" onclick="setCameraAperture('f/1.8', 'blur(4.5px)', this)">f/1.8 Bokeh</button>
+                            <button type="button" class="tool-btn active" onclick="setCameraAperture('f/2.8', 'blur(1.5px)', this)">f/2.8 Standar</button>
+                            <button type="button" class="tool-btn" onclick="setCameraAperture('f/8', 'none', this)">f/8 Tajam</button>
+                            <button type="button" class="tool-btn" id="cameraModeBtn" onclick="cycleCameraLensFilter(this)" title="Ganti Karakter Warna Film">
+                                <i data-lucide="film" size="13"></i> Film
+                            </button>
+                        </div>
+
+                        <div class="tool-group">
+                            <button type="button" class="tool-btn" onclick="openCurrentViewfinderPhoto()" title="Lihat Foto Ini di Galeri Penuh">
+                                <i data-lucide="maximize-2" size="13"></i> Detail
+                            </button>
+                            <button type="button" class="shutter-trigger-btn" onclick="triggerCameraShutter()">
+                                <i data-lucide="aperture" size="16"></i> Cekrek!
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modul 3: Laboratorium Suhu Pencahayaan Kelvin -->
+            <div class="light-lab-panel interactive-sheen reveal-on-scroll">
+                <div class="panel-header">
+                    <div>
+                        <div class="panel-kicker">Laboratorium Optik</div>
+                        <h3 class="panel-title">Eksperimen Temperatur Suhu Cahaya (Kelvin)</h3>
+                    </div>
+                    <span class="panel-badge">Re:Light Simulator</span>
+                </div>
+
+                <div class="light-lab-slider-row">
+                    <div class="slider-unit">
+                        <div class="slider-label-line">
+                            <span style="color:var(--text-heading);">Suhu Warna (Color Temperature)</span>
+                            <span id="kelvinValueDisplay" style="color:var(--accent-warm);">3200K (Tungsten Warm)</span>
+                        </div>
+                        <input type="range" class="slider-input" id="kelvinSlider" min="2200" max="7500" value="3200" step="100" oninput="updateKelvinSlider(this.value)">
+                        <div class="slider-scale-labels">
+                            <span>2200K (Lilin Hangat)</span>
+                            <span>4500K (Netral)</span>
+                            <span>7500K (Langit Senja)</span>
+                        </div>
+                    </div>
+
+                    <div class="slider-unit">
+                        <div class="slider-label-line">
+                            <span style="color:var(--text-heading);">Intensitas Sorotan (Light Beam Radius)</span>
+                            <span id="beamValueDisplay" style="color:var(--accent-warm);">65% (Sedang)</span>
+                        </div>
+                        <input type="range" class="slider-input" id="beamSlider" min="20" max="100" value="65" oninput="updateBeamSlider(this.value)">
+                        <div class="slider-scale-labels">
+                            <span>Sempit (Spotlight)</span>
+                            <span>Sedang</span>
+                            <span>Penuh (Floodlight)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modul 4: Pintu Masuk ke Galeri Foto Per Kategori -->
+            <div class="portals-section-header reveal-on-scroll">
+                <div>
+                    <span class="hero-meta">Pintu Masuk Galeri Foto</span>
+                    <h3>Pilih Kategori untuk Melihat Gambar</h3>
+                </div>
+            </div>
+
+            <div class="portals-grid">
+                <div class="portal-card interactive-sheen reveal-on-scroll" onclick="filterCatalog('design')">
+                    <div>
+                        <div class="portal-kicker">№ 01 / DESAIN</div>
+                        <h4 class="portal-title">Digital Design (<span id="portalCountDesign">4</span> Karya)</h4>
+                        <p class="portal-desc">Koleksi karya poster, eksplorasi tipografi horor, key art teater, dan grafis kebangsaan.</p>
+                    </div>
+                    <span class="portal-action">Buka Galeri Desain <i data-lucide="arrow-right" size="14"></i></span>
+                </div>
+
+                <div class="portal-card interactive-sheen reveal-on-scroll" onclick="filterCatalog('sketch')">
+                    <div>
+                        <div class="portal-kicker">№ 02 / SKETSA</div>
+                        <h4 class="portal-title">Sketsa Lepas (<span id="portalCountSketch">6</span> Karya)</h4>
+                        <p class="portal-desc">Koleksi coretan figuratif, studi anatomi wajah, arsir gelap terang, dan garis ekspresif bebas.</p>
+                    </div>
+                    <span class="portal-action">Buka Galeri Sketsa <i data-lucide="arrow-right" size="14"></i></span>
+                </div>
+
+                <div class="portal-card interactive-sheen reveal-on-scroll" onclick="filterCatalog('photo')">
+                    <div>
+                        <div class="portal-kicker">№ 03 / FOTOGRAFI</div>
+                        <h4 class="portal-title">Fotografi Jalanan (<span id="portalCountPhoto">9</span> Karya)</h4>
+                        <p class="portal-desc">Koleksi rekaman visual malam jalanan, geometri arsitektur, rimba senja, dan human interest.</p>
+                    </div>
+                    <span class="portal-action">Buka Galeri Fotografi <i data-lucide="arrow-right" size="14"></i></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- 4. GRID KATALOG KARYA (HANYA TAMPIL SAAT DESAIN / SKETSA / FOTO) -->
+        <!-- ================================================================ -->
+        <section class="catalog-grid" id="catalogGrid" style="display: none;">
+            <!-- Konten kartu foto/karya dimasukkan otomatis saat kategori dipilih -->
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- 5. CATATAN & ESAI (WRITING)                                      -->
+        <!-- ================================================================ -->
+        <section class="writing-section reveal-on-scroll" id="writing-section">
+            <div class="section-header">
+                <div>
+                    <span class="hero-meta">Pemikiran & Refleksi</span>
+                    <h2 class="section-title">Catatan di Antara Cahaya</h2>
+                </div>
+                <p class="section-sub">
+                    Gagasan singkat mengenai estetika, kejujuran proses belajar, dan narasi di balik apa yang kita ciptakan.
+                </p>
+            </div>
+
+            <!-- Wadah Kartu Esai -->
+            <div class="essay-grid" id="essayGridContainer">
+                <!-- Esai dimasukkan otomatis oleh js/main.js -->
+            </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- 6. REPOSITORI MUSIK SPOTIFY (SOUNDTRACK KREATIF)                 -->
+        <!-- ================================================================ -->
+        <section class="music-section reveal-on-scroll" id="music-section">
+            <div class="section-header">
+                <div>
+                    <div class="music-spotify-badge">
+                        <span class="spotify-dot"></span>
+                        <i data-lucide="music" size="14"></i>
+                        <span id="musicMetaBadge">Repositori Audio & Gelombang Suara</span>
+                    </div>
+                    <h2 class="section-title" id="musicSectionTitle">Soundtrack Ruang Kreatif</h2>
+                </div>
+                <p class="section-sub" id="musicSectionDesc">
+                    Koleksi kurasi playlist dan lagu Spotify yang menemani proses mendesain poster, mencoret sketsa malam hari, hingga berburu foto jalanan.
+                </p>
+            </div>
+
+            <!-- Grid Pemutar Spotify & Daftar Kurasi Lagu -->
+            <div class="music-layout-grid">
+                <!-- Kolom Kiri: Spotify Embed Player & Visual Vinyl -->
+                <div class="spotify-player-card interactive-sheen">
+                    <div class="player-header-wrap">
+                        <div>
+                            <span class="spotify-kicker">OFFICIAL SPOTIFY PLAYER</span>
+                            <h3 class="spotify-player-title" id="spotifyPlayerTitle">Re-Light: Darkroom Focus</h3>
+                        </div>
+
+                        <!-- Visual Vinyl & Equalizer -->
+                        <div class="vinyl-disc-anim">
+                            <div class="sound-equalizer">
+                                <span class="eq-bar"></span>
+                                <span class="eq-bar"></span>
+                                <span class="eq-bar"></span>
+                                <span class="eq-bar"></span>
+                                <span class="eq-bar"></span>
+                            </div>
+                            <div class="vinyl-art">
+                                <span class="vinyl-center-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Iframe Embed Resmi Spotify -->
+                    <div class="spotify-embed-container" id="spotifyEmbedContainer">
+                        <iframe 
+                            id="spotifyIframe"
+                            src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0" 
+                            width="100%" 
+                            height="352" 
+                            frameBorder="0" 
+                            allowfullscreen="" 
+                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                            loading="lazy">
+                        </iframe>
+                    </div>
+
+                    <!-- Tombol Aksi Buka di Aplikasi Spotify -->
+                    <a href="https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M" target="_blank" rel="noopener noreferrer" class="spotify-app-link" id="spotifyExternalLink">
+                        <i data-lucide="external-link" size="14"></i> Dengarkan Langsung di Spotify
+                    </a>
+                </div>
+
+                <!-- Kolom Kanan: Daftar Koleksi Lagu & Catatan Kurasi -->
+                <div class="music-repo-list" id="musicRepoListContainer">
+                    <!-- Item lagu diisi otomatis dari content/7_musik_spotify.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- 7. TENTANG SAYA (ABOUT ME)                                       -->
+        <!-- ================================================================ -->
+        <section class="about-section reveal-on-scroll" id="about-section">
+            <div class="about-layout">
+                <!-- Kartu Foto Profil -->
+                <div class="about-portrait-card interactive-sheen">
+                    <div class="about-img-box">
+                        <img id="profileAvatarImg" src="images/profile/profile.png.jpeg" alt="Raifan">
+                    </div>
+                    <h3 class="about-name" id="profileNameDisplay">Raifan</h3>
+                    <p class="about-role" id="profileRoleDisplay">Generalis Kreatif</p>
+                    <div class="about-status-tag">
+                        <span class="status-dot"></span>
+                        <span id="profileStatusDisplay">Terbuka untuk Kolaborasi</span>
+                    </div>
+                </div>
+
+                <!-- Konten Narasi Profil -->
+                <div class="about-content">
+                    <blockquote class="about-statement" id="profileQuoteDisplay">
+                        "Seorang manusia biasa yang lumayan bisa banyak hal tapi 'bisa'-nya nanggung. Website ini berawal dari rasa gabut, tapi semoga tetap memberi nilai."
+                    </blockquote>
+
+                    <p class="about-bio-text" id="profileBioDisplay">
+                        Halo, saya Raifan. Di balik label portofolio ini, saya hanyalah seseorang yang senang mengamati hal-hal visual di sekitar kita...
+                    </p>
+
+                    <!-- Matriks Keahlian / Alat -->
+                    <div class="skills-matrix">
+                        <div class="skills-label">Medium & Alat Eksplorasi</div>
+                        <div class="skills-chips" id="skillsContainer">
+                            <!-- Skill chips dimasukkan otomatis dari content/2_profil_saya.js -->
+                        </div>
+                    </div>
+
+                    <!-- Tombol Aksi Kontak -->
+                    <div class="contact-cta">
+                        <button type="button" class="btn-primary" id="contactEmailBtn">
+                            <i data-lucide="mail" size="15"></i> Hubungi / Salin Email
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="filterCatalog('photo')">
+                            <i data-lucide="camera" size="15"></i> Lihat Foto Pilihan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================================================================== -->
+    <!-- FOOTER                                                               -->
+    <!-- ==================================================================== -->
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <div class="footer-brand">
+                <span class="brand-lamp"></span>
+                <strong>Re-Light</strong>
+                <span>• Arsip Kreatif Digital</span>
+            </div>
+            <div class="footer-credit" id="footerCreditDisplay">
+                Dirancang dan dirawat oleh <strong>Raifan</strong>. Dibuat dengan niat dan kesederhanaan.
+            </div>
+            <div>
+                <button type="button" class="back-to-top" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+                    Kembali ke Atas <i data-lucide="arrow-up" size="14"></i>
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================================================================== -->
+    <!-- LIGHTBOX MODAL (PREVIEW FOTO)                                        -->
+    <!-- ==================================================================== -->
+    <div class="modal-overlay" id="artModal" role="dialog" aria-modal="true" aria-labelledby="modalTitleDisplay">
+        <div class="modal-window">
+            <button type="button" class="modal-close-btn" onclick="closeArtModal()" title="Tutup (Esc)">
+                <i data-lucide="x" size="18"></i>
+            </button>
+
+            <div class="modal-media-col">
+                <img id="modalImgDisplay" class="modal-preview-img" src="" alt="Detail Karya">
+            </div>
+
+            <div class="modal-info-col">
+                <div>
+                    <div class="modal-kicker" id="modalCategoryBadge">KATEGORI</div>
+                    <h2 class="modal-title" id="modalTitleDisplay">Judul Karya</h2>
+                    <p class="modal-desc" id="modalDescDisplay">Deskripsi karya...</p>
+
+                    <div class="modal-meta-table">
+                        <div class="modal-meta-row">
+                            <span class="modal-meta-key">Indeks Arsip</span>
+                            <span class="modal-meta-val" id="modalMetaIndex">№ 01 / 19</span>
+                        </div>
+                        <div class="modal-meta-row">
+                            <span class="modal-meta-key">Medium / Alat</span>
+                            <span class="modal-meta-val" id="modalMetaTool">Digital / Kamera</span>
+                        </div>
+                        <div class="modal-meta-row">
+                            <span class="modal-meta-key">Tahun / Status</span>
+                            <span class="modal-meta-val">2026 • Archive</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-nav-bar">
+                    <button type="button" class="modal-nav-btn" onclick="navigateModal(-1)">
+                        <i data-lucide="chevron-left" size="16"></i> Sebelumnya
+                    </button>
+                    <span class="modal-counter" id="modalCounter">1 / 19</span>
+                    <button type="button" class="modal-nav-btn" onclick="navigateModal(1)">
+                        Selanjutnya <i data-lucide="chevron-right" size="16"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- READING MODAL (ESAI LENGKAP)                                         -->
+    <!-- ==================================================================== -->
+    <div class="modal-overlay" id="essayModal" role="dialog" aria-modal="true" aria-labelledby="essayModalTitle">
+        <div class="essay-modal-window">
+            <button type="button" class="modal-close-btn" onclick="closeEssayModal()" title="Tutup (Esc)">
+                <i data-lucide="x" size="18"></i>
+            </button>
+            <div class="essay-modal-kicker">Catatan Pemikiran Raifan</div>
+            <h2 class="essay-modal-title" id="essayModalTitle">Judul Esai</h2>
+            <div class="essay-modal-body" id="essayModalBody">
+                <!-- Teks paragraf esai dimasukkan oleh js/main.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- NOTIFIKASI TOAST (SALIN EMAIL & AKSI)                                -->
+    <!-- ==================================================================== -->
+    <div class="toast" id="toast" role="status" aria-live="polite">
+        <i data-lucide="check-circle" size="16" style="color: #4ade80;"></i>
+        <span id="toastMsg">Alamat email disalin ke clipboard!</span>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- PUSAT KONTEN DIKATEGORIKAN (Sangat Mudah Diedit di VS Code)          -->
+    <!-- Setiap file terpisah sesuai kategorinya masing-masing                -->
+    <!-- ==================================================================== -->
+    <script src="content/1_teks_utama.js"></script>
+    <script src="content/2_profil_saya.js"></script>
+    <script src="content/3_karya_desain.js"></script>
+    <script src="content/4_karya_sketsa.js"></script>
+    <script src="content/5_karya_fotografi.js"></script>
+    <script src="content/6_catatan_esai.js"></script>
+    <script src="content/7_musik_spotify.js"></script>
+
+    <!-- Mesin Logika Utama & Motion Graphics Website -->
+    <script src="js/main.js"></script>
+</body>
+</html>
